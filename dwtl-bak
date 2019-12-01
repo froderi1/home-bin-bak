@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# script for daily cron job to backup dw images to a diffent machine
+# put into user crontab, not into sudo crontab!!!
+# rsa keys https://www.thegeekstuff.com/2008/11/3-steps-to-perform-ssh-login-without-password-using-ssh-keygen-ssh-copy-id
+
+rsync -avzre ssh /mnt/128/dwtl/crop/ frank@192.168.178.12:/mnt/500/dwtl_bak/crop/
+rsync -avzre ssh /var/ftp/upload/ipcam/ frank@192.168.178.12:/mnt/500/dwtl_bak/ipcam/

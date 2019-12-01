@@ -1,0 +1,8 @@
+#!/bin/bash
+
+FONT="-adobe-helvetica-*-*-*-*-54-*-*-*-*-*-*-*"
+FONT="-bitstream-courier*10*pitch-*-*-*-*-*-54-*-*-*-*-*-*"
+FONT="-bitstream-courier*10*pitch-medium-r-normal--54-0-0-0-m-0-iso8859-1*"
+
+while true ; do date +"%H:%M"; sleep 1; done | osd_cat --font=$FONT --color=white --align=right -l 1
+

@@ -1,0 +1,32 @@
+#!/bin/bash
+rate=$1
+
+sourcedir="/var/ftp/upload/ipcam/*/images"
+tempdir=`mktemp -d`
+
+if [ -z $rate ]; then rate=20 ; fi
+
+mkdir $tempdir/crop 
+
+# Alle
+cp $sourcedir/P*.jpg $tempdir
+
+# nur jedes n-te file copieren (hier jedes 3te)
+#cp `ls /var/ftp/upload/ipcam/*/images/*.jpg | awk 'NR % 3 == 0'` $tempdir
+
+# nur jedes 3-te mit 08 als stunde
+#cp `ls $sourcedir/???????08* | awk 'NR % 3 == 0'` $tempdir
+
+/usr/local/bin/2dark.sh $tempdir -d 0.4
+/usr/local/bin/dwcrop $tempdir $tempdir/crop
+/usr/local/bin/dwanno $tempdir/crop
+
+/usr/bin/ffmpeg \
+-y -r $rate \
+-pattern_type glob -i "$tempdir/crop/*.jpg" \
+-c:v libx264 -preset veryfast -an \
+-crf 27 \
+/mnt/128/dwtl/dwtlac.mp4
+
+rm -rf $tempdir
+

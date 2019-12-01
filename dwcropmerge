@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# make a video from images that were cropped and annotated with
+# dwammo and dwcrop
+
+now=`date +"%Y%m%d-%H%M"`
+
+rate=$1
+
+tempdir=`mktemp -d`
+
+if [ -z $rate ]; then rate=25 ; fi
+
+cp /mnt/128/dwtl/crop10/*/P*.jpg $tempdir
+cp /mnt/128/dwtl/crop/*/P*.jpg $tempdir
+
+/usr/bin/ffmpeg \
+-y -r $rate \
+-pattern_type glob -i "${tempdir}/*.jpg" \
+-c:v libx264 \
+-preset veryfast -an \
+-crf 27 \
+/mnt/128/dwtl/${now}.mp4
+
+rm -rf $tempdir
+

@@ -1,0 +1,21 @@
+#!/bin/bash
+
+#PROCS="http9797 proftpd dummy"
+
+PROCS="proftpd"
+
+for myProc in $PROCS; do
+	if [ `systemctl is-active $myProc` == "active" ]; then
+		echo "process ${myProc} is running!"
+    else
+		echo "process ${myProc} is not running!"
+		systemctl restart ${myProc}
+		sleep 10
+		if [ `systemctl is-active $myProc` == "active" ]; then
+			echo "process ${myProc} is running AGAIN!"
+			echo "`systemctl status ${myProc}`" | mail -s "${HOSTNAME}: process ${myProc} is running AGAIN!" froderi1@gmail.com
+		else
+			echo "`systemctl status ${myProc}`" | mail -s "${HOSTNAME}: process ${myProc} restart FAILED!" froderi1@gmail.com
+		fi
+	fi
+done

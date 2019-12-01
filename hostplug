@@ -1,0 +1,25 @@
+#!/bin/bash
+
+myHost="192.168.178.102"
+
+hostup () {
+if ping -c 1 $1 &> /dev/null; then
+ echo 1 ; else
+ echo 0 ; fi
+}
+
+if [ `hostup ${myHost}` = 1 ];then
+	echo "host ${myHost} is up!"
+else
+	echo "down `date +%Y-%m-%d_%H-%M-%S`" >> /home/frank/ipcam.txt
+	/usr/local/bin/plugrestart c
+	sleep 20
+	if [ `hostup ${myHost}` = 1 ];then
+		echo "host ${myHost} is up again!"
+		echo "up   `date +%Y-%m-%d_%H-%M-%S`" >> /home/frank/ipcam.txt
+		echo `ping -c 1 ${myHost}` | mail -s "Restart of host ${myHost} succeeded!" froderi1@gmail.com
+	else
+		echo "Restart of host ${myHost} failed!"
+		echo `ping -c 1 ${myHost}` | mail -s "Restart of host ${myHost} failed!" froderi1@gmail.com
+	fi
+fi

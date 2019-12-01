@@ -1,0 +1,9 @@
+#!/bin/bash
+#publish mqtt message for esp8266 with 433_mqtt to pick up
+#and cycle the plug socket with ID $1
+
+
+mosquitto_pub -h 192.168.178.12 -t "/home/rc" -m "${1}_off"
+sleep 15
+mosquitto_pub -h 192.168.178.12 -t "/home/rc" -m "${1}_on"
+

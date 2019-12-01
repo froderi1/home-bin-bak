@@ -1,0 +1,19 @@
+#!/bin/bash
+#
+# is called by feh with option: --action
+# will start a (second) feh session which allows to browse the
+# entire folder of an image which path was passed as parameter
+#
+
+str=$1
+# extract the path including the last slash
+path=${str%/*}
+
+fontpath="/usr/share/fonts/truetype/noto"
+font="NotoMono-Regular/34"
+
+/usr/local/bin/feh -F \
+--fontpath $fontpath --font $font \
+--info "printf %N" --draw-tinted \
+--action1 'fehstore %F' \
+"$path"

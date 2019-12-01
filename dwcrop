@@ -1,0 +1,15 @@
+#!/bin/bash
+# crops all images in $1 to the given dimensions 
+# and stores the result in $2
+
+
+source=$1
+dest=$2
+
+if [[ ! -d $dest ]] ; then mkdir $dest ; fi
+
+cd $source
+
+for i in *.jpg ; do
+	convert $i -crop 1440x1080+800+0 $dest/$i
+done

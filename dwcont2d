@@ -1,0 +1,17 @@
+#!/bin/bash
+
+yday=`date --date="1 days ago" +"%Y%m%d"`
+tempdir=`mktemp -d`
+
+cp `ls /var/ftp/upload/ipcam/$yday/images/*.jpg | awk 'NR % 10 == 0'` $tempdir
+
+#crop yesterdays images and place in dayly crop-folder
+/usr/local/bin/dwcrop $tempdir /mnt/128/dwtl/crop10/$yday
+
+# delete 2dark
+/usr/local/bin/2dark.sh /mnt/128/dwtl/crop10/$yday -d 0.3
+
+#annotate the cropped images with info from file name
+/usr/local/bin/dwanno /mnt/128/dwtl/crop10/$yday
+
+rm -rf $tempdir

@@ -1,0 +1,5 @@
+#!/bin/bash
+
+aktuhour=`date +%Y%m%d%H`
+
+scp frank@192.168.178.100:/home/frank/www/lastsnap.jpg /home/frank/parkimg/${aktuhour}.jpg

@@ -1,0 +1,40 @@
+#!/bin/bash
+#trap '' HUP
+
+# If feh is already running kill the process an d exit
+if pidof feh >/dev/null; then
+   sudo vbetool dpms off
+   killall feh osd_time slideshow
+else
+   sudo vbetool dpms on
+   delay=$1
+   # If argument empty, use 10 seconds as default.
+   if [ -z "$1" ];then
+      delay=10
+   fi
+   # If argument is not integer quit.
+   if [[ $1 = *[^0-9]* ]]; then
+      echo "The Argument \"$1\" is not valid, not an integer"
+      exit 1
+   fi
+
+   export DISPLAY=:0.0 && osd_time &
+
+   fontpath="/usr/share/fonts/truetype/noto"
+   font="NotoMono-Regular/34"
+
+   dir="/mnt/500/pictures"
+   dir="/mnt/wd03/roderigo/pictures"
+   dir="/mnt/128/pictures"
+
+   cd /home/frank
+   export DISPLAY=:0.0 && /usr/local/bin/feh \
+   -rZzF -D $delay \
+   --fontpath $fontpath --font $font \
+   --info "printf %N" --draw-tinted \
+   --action 'fehfol %F' \
+   --action1 'fehstore %F %N' \
+   $dir &
+fi
+
+exit 0

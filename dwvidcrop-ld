@@ -1,0 +1,48 @@
+#!/bin/bash
+
+# make a video from the last $1 days
+# at a fram rate of $2
+
+daydif=$1
+rate=$2
+
+sourcedir="/mnt/128/dwtl/crop"
+tempdir=`mktemp -d`
+
+# default values
+if [ -z $rate ]; then rate=10 ; fi
+if [ -z $daydif ]; then daydif=14 ; fi
+
+# first day of video
+dayago=`date --date="${daydif} days ago" +"%Y%m%d"`
+
+# source images copy to tmp dir
+thismonth=`date +"%Y%m"`
+lastmonth=`date --date="1 month ago" +"%Y%m"`
+cp $sourcedir/${lastmonth}*/P*.jpg $tempdir
+cp $sourcedir/${thismonth}*/P*.jpg $tempdir
+
+cd $tempdir
+
+# keep only images that are younger or equal to first video day
+for i in *.jpg ; do
+    dwday="20${i:1:2}${i:3:2}${i:5:2}"
+	echo $dwday
+	echo $dayago
+	if [[ $dwday -le $dayago ]]; then
+		rm $i
+	fi
+done
+
+# make the video at frame rate $2
+/usr/bin/ffmpeg \
+-y -r $rate \
+-pattern_type glob -i "${tempdir}/*.jpg" \
+-c:v libx264 \
+/mnt/128/dwtl/dw-last_${daydif}_days.mp4
+
+rm -rf $tempdir
+
+#-preset veryfast -an \
+#-crf 27 \
+

@@ -1,0 +1,12 @@
+#!/bin/bash
+
+source=$1
+
+cd $source
+
+for i in *.jpg ; do
+    dwtime="20${i:1:2}-${i:3:2}-${i:5:2} ${i:7:2}:${i:9:2}"
+
+	convert $i -fill '#0008' -draw 'rectangle 1077,0,1484,60' -fill white -pointsize 50 -annotate +1087+50 "$dwtime" $i
+done
+

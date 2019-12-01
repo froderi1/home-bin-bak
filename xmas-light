@@ -1,0 +1,28 @@
+#!/bin/bash
+
+today=`date +%Y%m%d`
+
+lit=$1
+
+if [ -z $lit ]; then lit=0.3 ; fi
+
+img=`find /var/ftp/upload/ipcam/$today/images | sort -n | tail -n 1`
+
+light=`/usr/local/bin/2dark.sh $img -o $lit`
+val=`/usr/local/bin/2dark.sh $img`
+
+echo $light
+echo $val
+
+if [ $light -eq 0 ]
+then
+	echo "`date +%Y-%m-%d_%H-%M-%S` OFF ${lit} ${light} ${val}" >> /home/frank/xmas.txt
+	mosquitto_pub -h 192.168.178.12 -t "/home/rc" -m "a_off"
+	sleep 10
+	mosquitto_pub -h 192.168.178.12 -t "/home/rc" -m "a_off"
+else
+    echo "`date +%Y-%m-%d_%H-%M-%S` ON  ${lit} ${light} ${val}">> /home/frank/xmas.txt
+	mosquitto_pub -h 192.168.178.12 -t "/home/rc" -m "a_on"
+	sleep 10
+    mosquitto_pub -h 192.168.178.12 -t "/home/rc" -m "a_on"
+fi

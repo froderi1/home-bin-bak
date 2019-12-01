@@ -1,0 +1,13 @@
+#!/bin/bash
+#
+# is called by feh --action1 to copy the current picture
+# which is passed as parameter with path to a folder
+# possibly trigger a script that syncs that folder with
+# desktop machine
+#
+echo $1 >> /home/frank/fehstore.log
+echo $2 >> /home/frank/fehstore.log
+
+#cp "$1" /home/frank/fehstore/"$2"
+#cp "$1" /mnt/500/fehstore/"$2"
+cp "$1" /mnt/128/fehstore/"$2"

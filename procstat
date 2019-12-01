@@ -1,0 +1,16 @@
+#!/bin/bash
+
+#PROCS="http9797 proftpd dummy"
+
+PROCS="proftpd dummy"
+
+for myProc in $PROCS; do
+	status=`systemctl is-active $myProc`
+	if [ $status == "active" ]; then
+		#echo "process ${myProc} is running!"
+		echo "procstat,host=${HOSTNAME} "${myProc}"=100"
+    else
+		#echo "process ${myProc} is not running!"
+		echo "procstat,host=${HOSTNAME} "${myProc}"=50"
+	fi
+done

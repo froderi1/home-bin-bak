@@ -1,0 +1,30 @@
+#!/bin/bash
+
+today=`date +"%Y%m%d"`
+yday=`date --date="1 days ago" +"%Y%m%d"`
+
+#crop yesterdays images and place in dayly crop-folder
+/usr/local/bin/dwcrop /var/ftp/upload/ipcam/$yday/images /mnt/128/dwtl/$yday
+#annotate the cropped images with info from file name
+/usr/local/bin/dwanno /mnt/128/dwtl/$yday
+
+#keep all cropped and annotated and delete 2dark
+cp -r /mnt/128/dwtl/$yday /mnt/128/dwtl/crop-all
+/usr/local/bin/2dark.sh /mnt/128/dwtl/crop-all/$yday -d 0.35
+
+#keep ydays originals annotated and 2dark
+mkdir /mnt/128/dwtl/big/$yday
+cp -r /var/ftp/upload/ipcam/$yday/images/* /mnt/128/dwtl/big/$yday
+/usr/local/bin/2dark.sh /mnt/128/dwtl/big/$yday -d 0.35
+/usr/local/bin/dwannobig /mnt/128/dwtl/big/$yday
+
+# video of yesterdays images for screening
+/usr/local/bin/dwvidcropday 10 /mnt/128/dwtl/$yday
+#make video of cropped action only images
+/usr/local/bin/dwvidcrop 25
+
+#last 7 days
+/usr/local/bin/dwvidcrop-ld 7 20
+
+#every 10th image into crop2
+/usr/local/bin/dwcont2d

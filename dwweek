@@ -1,0 +1,7 @@
+#!/bin/bash
+
+#make video with all original images that are not 2dark
+/usr/local/bin/dwvidftp 50
+
+#make video with all cropped images that are not 2dark
+/usr/local/bin/dwvidallcrop 50

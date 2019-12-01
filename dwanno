@@ -1,0 +1,15 @@
+#!/bin/bash
+# derives date/time picture was taken from file name 
+# and annotates the image at the given position
+
+
+source=$1
+
+cd $source
+
+for i in *.jpg ; do
+    dwtime="20${i:1:2}-${i:3:2}-${i:5:2} ${i:7:2}:${i:9:2}"
+
+	convert $i -fill '#0008' -draw 'rectangle 550,0,957,60' -fill white -pointsize 50 -annotate +560+50 "$dwtime" $i
+done
+

@@ -1,0 +1,36 @@
+#!/bin/bash
+
+HOSTS="rpold 192.168.178.26 homeserv 192.168.178.100 home 192.168.178.20 debian 192.168.178.12 rp1 192.168.178.17 192.168.178.102"
+
+hostup () {
+if ping -c 1 $1 &> /dev/null
+   then
+     echo 1
+   else
+     echo 0
+fi
+}
+
+hostcheck () {
+for myHost in $HOSTS; do
+   if [ `hostup $myHost` = 1 ];then
+      echo "host ${myHost} is up!"
+   else
+      echo "host ${myHost} is down!"
+      echo `ping -c 1 ${myHost}` | mail -s "${HOSTNAME}: host ${myHost} is down!" froderi1@gmail.com
+   fi
+done
+}
+
+if [ $HOSTNAME != "rpold" ]; then
+    if [ `hostup "debian"` = 1 ];then
+        echo "debian ist up, nothing to do here"
+        exit 1
+    else
+        hostcheck 
+    fi
+else
+   hostcheck
+fi
+
+
